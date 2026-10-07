@@ -1,4 +1,5 @@
 package services;
+
 import exceptions.ProductNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,15 @@ public class ProductService {
     private final List<Product> products = new ArrayList<>();
     private final Scanner scanner = new Scanner(System.in);
 
+    public ProductService() {
+        loadInitialProducts();
+    }
+
     public void addProduct() {
-        try{
+        try {
             System.out.println("Indique nombre del producto:");
             String name = Validations.validateName(scanner.nextLine());
-            
+
             System.out.println("Indique precio del producto:");
             double price = Validations.validatePrice(scanner.nextLine());
 
@@ -25,7 +30,7 @@ public class ProductService {
             products.add(product);
 
             System.out.println("Producto agregado: " + product);
-        } catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -34,36 +39,36 @@ public class ProductService {
         System.out.println("Lista de productos:");
         System.out.println("------------------\n");
 
-        if(products.isEmpty()) {
+        if (products.isEmpty()) {
             System.out.println("No hay productos disponibles.");
             return;
         }
-        
+
         for (Product product : products) {
             System.out.println(product);
-        }    
+        }
     }
 
-    public void updateProduct () {
+    public void updateProduct() {
         try {
             System.out.println("1. Buscar por ID");
-            System.out.println("2. Buscar por nombre");  
-            
+            System.out.println("2. Buscar por nombre");
+
             int option = Validations.validateInteger(scanner.nextLine());
             Product product;
-            
+
             product = getProductFound(option);
 
             System.out.println("Producto encontrado: " + product);
-            
+
             boolean updateComplete = false;
-            while(!updateComplete) {
+            while (!updateComplete) {
                 updateMenu();
                 option = Validations.validateInteger(scanner.nextLine());
 
                 // metodo para actualizar el producto a partir de la opcion elegida
                 executeUpdateOption(option, product);
-                
+
                 if (option == 4) {
                     updateComplete = true;
                 }
@@ -71,7 +76,7 @@ public class ProductService {
         } catch (ProductNotFoundException | IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
-        
+
     }
 
     public void deleteProduct() {
@@ -151,5 +156,12 @@ public class ProductService {
             case 4 -> System.out.println("\nSaliendo del menú de actualización...");
             default -> System.out.println("Opción inválida. Intente nuevamente.");
         }
+    }
+
+    private void loadInitialProducts() {
+        products.add(new Product("Yerba", 2500, 20));
+        products.add(new Product("Azucar", 1200, 15));
+        products.add(new Product("Café", 4500, 10));
+        products.add(new Product("Leche", 1500, 30));
     }
 }
